@@ -85,6 +85,10 @@
       :desc "Select n-th window"
       "4" #'winum-select-window-4)
 
+(map! :leader
+      :desc "Connect clj&cljs"
+      "\\" #'cider-jack-in-clj&cljs)
+
 ;; Scroll
 
 (setq pixel-resolution-fine-flag t)
@@ -139,3 +143,14 @@
 (add-hook 'haskell-mode-hook
           (lambda ()
             (add-hook 'before-save-hook 'haskell-mode-stylish-buffer)))
+
+;; Configure wakatime
+
+(use-package! wakatime-mode
+  :hook (after-init . global-wakatime-mode))
+
+(setq wakatime-api-key "${WAKATIME_API_KEY}")
+
+;; Display whitespaces
+
+;; (add-hook 'prog-mode-hook 'whitespace-mode)

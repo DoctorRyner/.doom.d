@@ -6,6 +6,8 @@
 ;; use 'M-x doom/reload'.
 
 (package! highlight-parentheses)
+(package! wakatime-mode)
+;; (package! whitespace-mode)
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)

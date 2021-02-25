@@ -53,8 +53,6 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; Structurial editing
-
 (map! :leader
       :desc "Paredit move parens backwards"
       "[" #'sp-forward-barf-sexp)
@@ -63,7 +61,6 @@
       :desc "Paredit move parens forward"
       "]" #'sp-forward-slurp-sexp)
 
-;; Comment line
 (map! :leader
       :desc "Comment line"
       "c l" #'evilnc-comment-or-uncomment-lines)
@@ -85,194 +82,40 @@
       :desc "Select 4-th window"
       "4" #'winum-select-window-4)
 
+;; Clojure
 (map! :leader
       :desc "Connect clj&cljs"
       "\\" #'cider-jack-in-clj&cljs)
 
-;; (map! :leader
-;;       :desc "Miracle connect"
-;;       "x" #'miracle)
-
-;; (map! :leader
-;;       :desc "Miracle connect"
-;;       "l" #'idris-ipkg-build)
-
-;; (map! :leader
-;;       :desc "Switch to miracle repl"
-;;       "z" #'miracle-switch-to-repl)
-
-;; Scroll
-
+;; Scrolling and mouse support
 (setq pixel-resolution-fine-flag t)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1)))
 (setq mouse-wheel-progressive-speed nil)
 (setq mouse-wheel-follow-mouse 't)
+
+(setq scroll-margin 1)
 (setq scroll-step 1)
+(setq scroll-conservatively 10000)
+(setq scroll-preserve-screen-position 1)
 
-;; (xterm-mouse-mode)
-(global-set-key [mouse-4] (lambda () (interactive) (scroll-down 5)))
-(global-set-key [mouse-5] (lambda () (interactive) (scroll-up 5)))
-;; (global-set-key [S-mouse-4] (lambda () (interactive) (scroll-down 1)))
-;; (global-set-key [S-mouse-5] (lambda () (interactive) (scroll-up 1)))
-;; (global-set-key [C-mouse-4] (lambda () (interactive) (scroll-down)))
-;; (global-set-key [C-mouse-5] (lambda () (interactive) (scroll-up)))
+(xterm-mouse-mode)
+(global-set-key [mouse-4] (lambda () (interactive) (scroll-down 2)))
+(global-set-key [mouse-5] (lambda () (interactive) (scroll-up 2)))
+(global-set-key [S-mouse-4] (lambda () (interactive) (scroll-down 6)))
+(global-set-key [S-mouse-5] (lambda () (interactive) (scroll-up 6)))
+(global-set-key [C-mouse-4] (lambda () (interactive) (scroll-down)))
+(global-set-key [C-mouse-5] (lambda () (interactive) (scroll-up)))
 
-;; Enable real-time linting
-
-(after! flycheck
-  (setq flycheck-check-syntax-automatically '(save idle-change new-line mode-enabled)))
-
-;; Dissable autoquit
-
+;; Dissable quit banner
 (setq confirm-kill-emacs nil)
 
-;; Enable spelling
-;; (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
-;; Make neotree resizable
-
-(setq neo-window-fixed-size nil)
-
-;; Parens and colors higlighting
-
+;; Parens highlighting
 (add-hook 'prog-mode-hook 'highlight-parentheses-mode)
-(add-hook 'prog-mode-hook 'rainbow-mode)
-
-;; Load Clojure buffer on save
-
-;; (add-hook 'cider-connected-hook
-;;           (lambda ()
-;;             (add-hook 'after-save-hook 'cider-load-buffer)))
-
-;; (add-hook 'cider-mode-hook
-;;      '(lambda () (add-hook 'after-save-hook
-;;       '(lambda ()
-;;          (if (and (boundp 'cider-mode) cider-mode)
-;;       (cider-namespace-refresh)
-;;            )))))
-
-;; (defun cider-namespace-refresh ()
-;;   (interactive)
-;;   (cider-interactive-eval
-;;    "(require 'clojure.tools.namespace.repl)
-;;   (clojure.tools.namespace.repl/refresh)"))
-
-;; Haskell
-
-;; (add-hook 'haskell-mode-hook
-;;           (lambda ()
-;;             (add-hook 'after-save-hook 'haskell-process-load-or-reload)))
-
-;; (add-hook 'haskell-mode-hook 'haskell-session-change)
-
-;; (add-hook 'haskell-mode-hook
-;;           (lambda ()
-;;             (add-hook 'before-save-hook 'haskell-mode-stylish-buffer)))
-
-;; Configure wakatime
 
 (use-package! wakatime-mode
   :hook (after-init . global-wakatime-mode))
 
 (setq wakatime-api-key "${WAKATIME_API_KEY}")
 
-;; Display whitespaces
-
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
-
-;; Kuromoji
-
-;; (add-to-list 'load-path "~/.emacs.d/kuromoji")
-;; (require 'kuromoji)
-;; (setq kuromoji-jar-path "~/tools/kuromoji-0.7.7/lib/kuromoji-0.7.7.jar")
-
-;; Miracle
-
-;; (add-to-list 'load-path "~/.emacs.d/miracle")
-;; (require 'miracle)
-;; (add-hook 'clojure-mode-hook 'clojure-enable-miracle)
-
-;; Arcadia autocomplete
-
-;; (with-eval-after-load "miracle"
-;;   (defun miracle-eval-string (s callback)
-;;     (miracle-send-eval-string
-;;      s
-;;      (lambda (response)
-;;              (miracle-dbind-response response (id value status)
-;;                                      (when (member "done" status)
-;;                                        (remhash id miracle-requests))
-;;                                      (when value
-;;                                        (funcall callback nil value))))))
-
-;;   (defun miracle-get-completions (word callback)
-;;     (interactive)
-;;     (miracle-eval-string
-;;      (format "(do (require '[%s]) (%s/completions \"%s\"))"
-;;              "complete.core" "complete.core" word)
-;;      (lambda (err s)
-;;              (progn
-;;               ;; XXX
-;;               (message (format "received str: %s" s))
-;;               (message (format "err: %s" err))
-;;               (when (not err)
-;;                 (funcall callback (read-from-whole-string s)))))))
-
-;;   (defun company-miracle (command &optional arg &rest ignored)
-;;     (interactive (list 'interactive))
-;;     (cl-case command
-;;              (interactive (company-begin-backend 'company-miracle))
-;;              (prefix (and (or ;;(eq major-mode 'clojurec-mode)
-;;                            ;;(eq major-mode 'clojure-mode)
-;;                            (eq major-mode 'miracle-mode))
-;;                           (get-buffer "*miracle-connection*")
-;;                           (substring-no-properties (company-grab-symbol))))
-;;              (candidates (lexical-let ((arg (substring-no-properties arg)))
-;;                                       (cons :async (lambda (callback)
-;;                                                            (miracle-get-completions arg callback)))))))
-
-;;   ;; XXX: problems w/o the following when invoking company-grab-symbol
-;;   (setq cider-mode nil)
-;;   (add-to-list 'company-backends 'company-miracle))
-
-;; Neotree
-
-(setq doom-themes-neotree-file-icons t)
-(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-
-(setq neo-hidden-regexp-list
-      '("\\.meta$"
-        "^\\."))
-
-(setq neo-show-hidden-files nil)
-
-;; LSP
-
-;; (use-package! lsp-ui
-;;   :commands lsp-ui-mode)
-
-;; (use-package! company-lsp
-;;   :commands company-lsp)
-
-;; Webmode 2 spaces
-
-(defun my-web-mode-hook ()
-  "Hooks for Web mode."
-  (setq web-mode-markup-indent-offset 2)
-)
-(add-hook 'web-mode-hook  'my-web-mode-hook)
-
-;; Idris
-;; (add-hook 'after-save-hook 'idris-load-file)
-
-;; (add-hook 'idris-mode-hook
-;;           (lambda ()
-;;             (setq-default tab-width 4)
-;;             (add-hook 'after-save-hook 'idris-load-file)))
-
-;; Indent setter
-
-(setq-default indent-tabs-mode nil)
-(setq-default tab-width 4)
-(setq c-set-style "k&r")
-(setq c-basic-offset 4)
+;; Set column line width
+(setq-default fill-column 100)

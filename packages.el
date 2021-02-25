@@ -7,9 +7,6 @@
 
 (package! highlight-parentheses)
 (package! wakatime-mode)
-(package! all-the-icons)
-(package! dhall-mode)
-;; (package! whitespace-mode)
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
